@@ -45,3 +45,10 @@ found in the folder Development. This script works by reading values from to
 database used by de MysqlOutput, but with the time shifted 6 hours back. To use
 the simulator, you should use the MysqlOutput to fill the database and configure
 database settings in de sim-config.cfg file.
+
+### UDPListener
+An initial baseline UDPserver is available (see UDPListener.py) which will just print every message
+it receives from the Omnik inverter to standard out. This is similar to how the inverter logs data
+to the omnikportal web site. You have to add your host ip and port to the Omnik configuration for this to work.
+Still a work in progress.
+ 
