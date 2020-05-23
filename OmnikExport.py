@@ -26,8 +26,8 @@ class OmnikExport(object):
 
     def __init__(self, config_file):
         # Load the setting
-        config_files = [self.__expand_path('config-default.cfg'),
-                        self.__expand_path(config_file)]
+        config_files = [self.expand_path('config-default.cfg'),
+                        self.expand_path(config_file)]
 
         self.config = ConfigParser.RawConfigParser()
         self.config.read(config_files)
@@ -39,7 +39,7 @@ class OmnikExport(object):
 
         # Load output plugins
         # Prepare path for plugin loading
-        sys.path.append(self.__expand_path('outputs'))
+        sys.path.append(self.expand_path('outputs'))
 
         Plugin.config = self.config
         Plugin.logger = self.logger
@@ -55,18 +55,24 @@ class OmnikExport(object):
         ip = self.config.get('inverter', 'ip')
         port = self.config.get('inverter', 'port')
 
-        for res in socket.getaddrinfo(ip, port, socket.AF_INET,
-                                      socket.SOCK_STREAM):
-            family, socktype, proto, canonname, sockadress = res
-            try:
-                self.logger.info('connecting to {0} port {1}'.format(ip, port))
-                inverter_socket = socket.socket(family, socktype, proto)
-                inverter_socket.settimeout(10)
-                inverter_socket.connect(sockadress)
-            except socket.error as msg:
-                self.logger.error('Could not open socket')
-                self.logger.error(msg)
-                sys.exit(1)
+        # Host lookup will fail if inverter is off (i.e. at night)
+        try:
+            for res in socket.getaddrinfo(ip, port, socket.AF_INET,
+                                          socket.SOCK_STREAM):
+                family, socktype, proto, canonname, sockadress = res
+                try:
+                    self.logger.info('connecting to {0} port {1}'.format(ip, port))
+                    inverter_socket = socket.socket(family, socktype, proto)
+                    inverter_socket.settimeout(10)
+                    inverter_socket.connect(sockadress)
+                except socket.error as msg:
+                    self.logger.error('Could not open socket')
+                    self.logger.error(msg)
+                    sys.exit(1)
+        except socket.error as msg:
+            self.logger.error('Inverter lookup failed: inverter is down?')
+            self.logger.error(msg)
+            sys.exit(1)
 
         wifi_serial = self.config.getint('inverter', 'wifi_sn')
         inverter_socket.sendall(OmnikExport.generate_string(wifi_serial))
@@ -76,7 +82,7 @@ class OmnikExport(object):
         msg = InverterMsg.InverterMsg(data)
 
         self.logger.info("ID: {0}".format(msg.id))
-
+ 
         for plugin in Plugin.plugins:
             self.logger.debug('Run plugin' + plugin.__class__.__name__)
             plugin.process_message(msg)
@@ -104,7 +110,7 @@ class OmnikExport(object):
                 },
                 'file': {
                     'class': 'logging.FileHandler',
-                    'filename': self.__expand_path(config.get('log',
+                    'filename': self.expand_path(config.get('log',
                                                               'filename')),
                     'formatter': 'f'},
             },
@@ -123,7 +129,7 @@ class OmnikExport(object):
         self.config.set(section, option, value)
 
     @staticmethod
-    def __expand_path(path):
+    def expand_path(path):
         """
         Expand relative path to absolute path.
 

@@ -57,10 +57,43 @@ class InverterMsg(object):
         return float(
             struct.unpack('!I', self.raw_msg[begin:begin + 4])[0]) / divider
 
+    def dump(self):
+        n = 0
+        print 'byte, ASC, HEX, CHR'
+        for b in self.raw_message:
+            print(n, b, hex(b), chr(b))
+            n = n + 1
+
+
+    @property
+    def raw_message(self):
+        """Raw Message."""
+        return bytearray(self.raw_msg)
+
     @property
     def id(self):
         """ID of the inverter."""
         return self.__get_string(15, 31)
+
+    @property
+    def status(self):
+        """Status of the inverter."""
+        return self.__get_string(15, 28)
+
+    @property
+    def aknowledge(self):
+        """UDP aknowledgement message of inverter."""
+        return self.__get_string(12, 27)
+
+    @property
+    def firmware_main(self):
+        """Main firmware version of inverter."""
+        return self.__get_string(97, 112)
+
+    @property
+    def firmware_slave(self):
+        """Main firmware version of inverter."""
+        return self.__get_string(117, 126)
 
     @property
     def temperature(self):
