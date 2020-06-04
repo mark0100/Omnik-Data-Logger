@@ -42,7 +42,7 @@ while(True):
 
     print "{0}: Message from: {1}: ".format(datetime.datetime.now(), sender)
 
-    if msg.status == 'INVERTER DATA':
+    if msg.status == 'NO INVERTER DATA':
         print('Inverter Status Fault. Message:')
         msg.dump()
 

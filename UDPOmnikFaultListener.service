@@ -1,0 +1,16 @@
+# Things todo:
+# - fill in the ExecStart setting below for your system
+# - sudo cp UDPOmnikFaultListener.service /etc/systemd/system
+# - sudo chmod 666 /etc/systemd/system/UDPOmnikFaultListener.service
+# - sudo systemctl daemon-reload
+# - sudo systemctl start UDPOmnikFaultListener.service
+# - sudo systemctl enable UDPOmnikFaultListener.service
+
+[Unit]
+Description=UDP Listener for Omnik inverter faults.
+
+[Service]
+ExecStart=/usr/bin/python /home/mark/Omnik-Data-Logger/UDPOmnikFaultListener.py	
+
+[Install]
+WantedBy=multi-user.target

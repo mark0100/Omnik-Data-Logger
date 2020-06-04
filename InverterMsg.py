@@ -78,7 +78,7 @@ class InverterMsg(object):
     @property
     def status(self):
         """Status of the inverter."""
-        return self.__get_string(15, 28)
+        return self.__get_string(12, 28)
 
     @property
     def aknowledge(self):

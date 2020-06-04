@@ -19,7 +19,7 @@ class PVoutputOutput(PluginLoader.Plugin):
 
         if (now.minute % 5) == 0:  # Only run at every 5 minute interval
 
-            if msg.status == 'INVERTER DATA':
+            if msg.status == 'NO INVERTER DATA':
                 self.logger.info('Inverter Status Fault. Message:')
                 msg.dump()
 
