@@ -8,9 +8,13 @@
 
 [Unit]
 Description=UDP Listener for Omnik inverter faults.
+After=network.target
 
 [Service]
 ExecStart=/usr/bin/python /home/mark/Omnik-Data-Logger/UDPOmnikFaultListener.py	
+#Restart=always
+#RestartSec=1
+User=mark
 
 [Install]
 WantedBy=multi-user.target
