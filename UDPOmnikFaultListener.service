@@ -1,9 +1,9 @@
 # Things todo:
-# - fill in the ExecStart setting below for your system
-# - sudo cp UDPOmnikFaultListener.service /etc/systemd/system
+# - fill in the setting below for your system
+# - cp UDPOmnikFaultListener.service /etc/systemd/system
 # - sudo chmod 666 /etc/systemd/system/UDPOmnikFaultListener.service
 # - sudo systemctl daemon-reload
-# - sudo systemctl start UDPOmnikFaultListener.service
+# - systemctl start UDPOmnikFaultListener.service
 # - sudo systemctl enable UDPOmnikFaultListener.service
 
 [Unit]

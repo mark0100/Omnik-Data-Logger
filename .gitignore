@@ -12,4 +12,5 @@
 ## App specific
 config.cfg
 omnik-export.log
+omnik-faults.log
 Development/sim-config.cfg
