@@ -13,7 +13,7 @@ class ConsoleOutput(PluginLoader.Plugin):
         serial = self.config.get('inverter', 'serial')
 
         if msg.status == 'NO INVERTER DATA':
-            self.logger.info('Inverter Status Fault. Message:')
+            self.logger.error('Inverter Status Fault. Message:')
             msg.dump()
 
         elif msg.aknowledge == 'DATA SEND IS OK':

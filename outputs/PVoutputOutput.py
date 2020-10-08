@@ -20,7 +20,7 @@ class PVoutputOutput(PluginLoader.Plugin):
         if (now.minute % 5) == 0:  # Only run at every 5 minute interval
 
             if msg.status == 'NO INVERTER DATA':
-                self.logger.info('Inverter Status Fault. Message:')
+                self.logger.error('Inverter Status Fault. Message:')
                 msg.dump()
 
             elif msg.aknowledge == 'DATA SEND IS OK':
@@ -57,7 +57,13 @@ class PVoutputOutput(PluginLoader.Plugin):
                 get_data_encoded = urllib.urlencode(get_data)
 
                 request_object = urllib2.Request(url + '?' + get_data_encoded)
-                response = urllib2.urlopen(request_object)
+                
+                try:
+                    response = urllib2.urlopen(request_object)
+                except urllib2.HTTPError, e:
+                    self.logger.error('HTTPError = ' + str(e.code))
+                except urllib2.URLError, e:
+                    self.logger.error('URLError = ' + str(e.reason))
 
                 self.logger.info(response.read())  # Show the response
 

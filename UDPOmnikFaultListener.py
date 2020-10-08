@@ -1,11 +1,8 @@
 #!/usr/bin/python
 import socket
-import sys
 import logging
 from logging.config import fileConfig
 import ConfigParser
-import os
-from PluginLoader import Plugin
 import InverterMsg  # Import the Msg handler
 import datetime
 from OmnikExport import OmnikExport
@@ -58,10 +55,10 @@ while(True):
 
     elif msg.aknowledge == 'DATA SEND IS OK':
         logger.debug('Aknowledgement message received: DATA SEND IS OK')
-        
+
     elif msg.id == serial:
         logger.debug("Received data from ID: {0}".format(msg.id))
-        
+
     else:
         logger.error('Unknown message received. Message:')
         logger.error('byte  ASC   HEX   CHR')

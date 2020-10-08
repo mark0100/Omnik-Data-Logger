@@ -12,6 +12,7 @@ import ConfigParser
 import os
 from PluginLoader import Plugin
 import InverterMsg  # Import the Msg handler
+from Daylight import Daylight
 
 
 class OmnikExport(object):
@@ -51,15 +52,22 @@ class OmnikExport(object):
             self.logger.debug('Importing output plugin ' + plugin_name)
             __import__(plugin_name)
 
+
+        daylight = Daylight(self.config, self.logger)
+
+        # Host lookup will fail if inverter is off (i.e. at night)
+        if(daylight.isSunUp == False):
+            self.logger.info('Sun is not yet up. Aborting...')
+            sys.exit(1)
+
         # Connect to inverter
         ip = self.config.get('inverter', 'ip')
         port = self.config.get('inverter', 'port')
 
-        # Host lookup will fail if inverter is off (i.e. at night)
         try:
-            for res in socket.getaddrinfo(ip, port, socket.AF_INET,
-                                          socket.SOCK_STREAM):
+            for res in socket.getaddrinfo(ip, port, socket.AF_INET, socket.SOCK_STREAM):
                 family, socktype, proto, canonname, sockadress = res
+
                 try:
                     self.logger.info('connecting to {0} port {1}'.format(ip, port))
                     inverter_socket = socket.socket(family, socktype, proto)
@@ -69,6 +77,7 @@ class OmnikExport(object):
                     self.logger.error('Could not open socket')
                     self.logger.error(msg)
                     sys.exit(1)
+
         except socket.error as msg:
             self.logger.error('Inverter lookup failed: inverter is down?')
             self.logger.error(msg)
@@ -82,7 +91,7 @@ class OmnikExport(object):
         msg = InverterMsg.InverterMsg(data)
 
         self.logger.info("ID: {0}".format(msg.id))
- 
+
         for plugin in Plugin.plugins:
             self.logger.debug('Run plugin' + plugin.__class__.__name__)
             plugin.process_message(msg)
