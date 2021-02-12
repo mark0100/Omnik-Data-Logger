@@ -84,8 +84,15 @@ class OmnikExport(object):
             sys.exit(1)
 
         wifi_serial = self.config.getint('inverter', 'wifi_sn')
-        inverter_socket.sendall(OmnikExport.generate_string(wifi_serial))
-        data = inverter_socket.recv(1024)
+        try:
+            inverter_socket.sendall(OmnikExport.generate_string(wifi_serial))
+            data = inverter_socket.recv(1024)
+        except socket.error as msg:
+            self.logger.error('Could not receive data from inverter')
+            self.logger.error(msg)
+            inverter_socket.close()
+            sys.exit(2)    
+            
         inverter_socket.close()
 
         msg = InverterMsg.InverterMsg(data)

@@ -16,6 +16,7 @@ class PVoutputOutput(PluginLoader.Plugin):
         """
         now = datetime.datetime.now()
         serial = self.config.get('inverter', 'serial')
+        response = None
 
         if (now.minute % 5) == 0:  # Only run at every 5 minute interval
 
@@ -65,11 +66,16 @@ class PVoutputOutput(PluginLoader.Plugin):
                 except urllib2.URLError, e:
                     self.logger.error('URLError = ' + str(e.reason))
 
-                self.logger.info(response.read())  # Show the response
+                if response is not None:
+                    self.logger.info(response.read())  # Show the response
+                else:
+                    self.logger.error('No response from PVOutput site. Aborting PVoutput...')
 
             else:
                 self.logger.error('Unknown message received - Aborting. Message:')
                 msg.dump()
 
                 #sys.exit(1)
+        else:
+            self.logger.debug('Not modulo 5 minutes yet. Nothing exported to PVOutput.')
 
