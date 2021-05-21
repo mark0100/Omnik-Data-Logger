@@ -53,3 +53,9 @@ it receives from the Omnik inverter to standard out. This is similar to how the 
 to the omnikportal web site. You have to add your host ip and port to the Omnik configuration for this to work.
 Still a work in progress.
 UDPOmnikFaultListener will only log status faults from the inverter and dump the fault message in the logfile.
+
+### DISCONTINUED as of May 21, 2021
+As of May 21, 2021 this repository is discontinued.
+A new repository is available on github here: https://github.com/mark0100/omniklogger.git
+The new repository will hold an UDP Listener for Omnik messages and logging them to plugable outputs based on the work that can be found here.
+

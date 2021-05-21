@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import socket
 import logging
+import logging.handlers
 from logging.config import fileConfig
 import ConfigParser
 import InverterMsg  # Import the Msg handler
@@ -32,6 +33,7 @@ UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 # Bind to address and ip
 UDPServerSocket.bind((localIP, localPort))
 
+# logging.getLevelName(logger.level)
 logger.info("UDP Omnik Fault server up and listening on {0} on port {1}".format(localIP, localPort))
 
 # Listen for incoming datagrams
